@@ -5,6 +5,7 @@ __author__ = 'levitan'
 import quantumRW as QW
 from numpy import *
 from matplotlib import pyplot as plt
+import quantumRWMat as QWM
 
 totalSteps=100
 plotSteps=10
@@ -16,4 +17,7 @@ plotSteps=10
 #QW.writeQW(qwalker,'QW_'+str(steps)+'.txt')
 
 
-qwalker=QW.quantumWalker(1/sqrt(2),1j/sqrt(2),1/sqrt(2),1j/sqrt(2),totalSteps,plotSteps)
+#qwalker=QW.quantumWalker(1/sqrt(2),1j/sqrt(2),1/sqrt(2),1j/sqrt(2),totalSteps,plotSteps)
+
+distribution=QWM.QWDistribution(1/sqrt(2),1j/sqrt(2),1/sqrt(2),1j/sqrt(2),100)
+QWM.Plot2D(distribution,100)
