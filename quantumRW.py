@@ -3,10 +3,7 @@
 
 __author__ = 'levitan'
 
-import math
 from numpy import *
-import numpy as np
-import random
 from matplotlib import pyplot as plt
 import copy
 
