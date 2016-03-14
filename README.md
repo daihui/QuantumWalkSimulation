@@ -1,6 +1,6 @@
 # 2D Quantum Walk Simulation
 This is a simple 2D classical random walk and quantum walk simulation project.
-There are two part of simulation:
+There are two parts of simulation:
 
 -  Classical Random walk
 
@@ -10,4 +10,4 @@ There are two part of simulation:
 
    See [Quantum Walk](https://github.com/daihui/QuantumWalkSimulation/blob/master/quantumRWMat.py)
 
-Based this simulation I have made two GIF which can do a intresting compare [Classical](https://github.com/daihui/QuantumWalkSimulation/blob/master/CRW.gif) VS [Quantum](https://github.com/daihui/QuantumWalkSimulation/blob/master/QW.gif)
+Based on this simulation I have made two GIF which can do a intresting compare [Classical](https://github.com/daihui/QuantumWalkSimulation/blob/master/CRW.gif) VS [Quantum](https://github.com/daihui/QuantumWalkSimulation/blob/master/QW.gif)
