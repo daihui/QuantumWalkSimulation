@@ -50,7 +50,7 @@ def Plot2D(classcialWalker,steps):
     plt.xlabel('X Position(started in center)')
     plt.ylabel('Y Position(started in center)')
     plt.imshow(classcialWalker)
-    plt.savefig('CRW_'+str(steps)+'.png')
+    plt.savefig('Fig/CRW_' + str(steps) + '.png')
     plt.close()
 
 for i in range(1,11):

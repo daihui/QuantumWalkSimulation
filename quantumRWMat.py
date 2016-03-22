@@ -114,7 +114,7 @@ def writeQWtoArray(distribution, filename):
 
 
 def writeQWtoList(distribution, filename):
-    distrFlie = open(filename, 'w+')
+    distrFlie = open('Data/' + filename, 'w+')
     for x in range(shape(distribution)[0]):
         for y in range(shape(distribution)[1]):
             distrFlie.write(str(x) + '\t' + str(y) + '\t' + str(distribution[x][y]) + '\n')
@@ -129,7 +129,7 @@ def Plot2D(qw, steps):
     plt.xlabel('X Position (started in center)')
     plt.ylabel('Y Position (started in center)')
     plt.imshow(qw)
-    plt.savefig('QWM_' + str(steps) + '.png')
+    plt.savefig('Fig/QWM_' + str(steps) + '.png')
     plt.close()
 
 
