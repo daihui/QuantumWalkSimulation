@@ -100,13 +100,13 @@ def writeQWtoArray(distribution, filename):
 
 
 # 画出位置概率分布图
-def PlotX(distribution, step):
+def PlotX(distribution, step, figName):
     plt.plot(distribution)
-    plt.title('The Distribution of Quantum Walk with Different Shift')
-    plt.xlabel('Started from the center')
+    plt.title('The Distribution of %s Quantum Walk with Different Shift') % step
+    plt.xlabel('Started from the 0')
     plt.ylabel('Probability')
     # plt.show()
-    plt.savefig('Fig/QDS_Cicle' + str(step) + '.png')
+    plt.savefig('Fig/' + str(figName) + str(step) + '.png')
     plt.close()
 
 
@@ -174,25 +174,43 @@ def QWDistribution(X0, X1, steps, shiftGateNum, node):
     return distribution
 
 
+# 对位置列表进行位移，使原点保持不变
+def ciclePosiTrans(positionMap, steps, shiftGateNum):
+    node = shape(positionMap)[0]
+    positionMapTrans = zeros([node], float)
+    initNode = (power(2, shiftGateNum) - 1) * steps % node
+    for i in range(node):
+        positionMapTrans[i] = positionMap[(initNode + i) % node]
+    return positionMapTrans
+
+
 # 画出2D位置分布图
-def PlotCicle(distribution, steps):
+def PlotCicle(distribution, steps, shiftGateNum, figName):
     node = shape(distribution)[0]
     radius = node / (2 * math.pi)
-    positionMap = zeros([2 * int(radius) + 4, 2 * int(radius) + 4])
+    x = zeros([node], float)
+    y = zeros([node], float)
     for i in range(node):
-        x = int(sin(i * 2 * math.pi / node) * radius) + int(radius) + 2
-        y = int(cos(i * 2 * math.pi / node) * radius) + int(radius) + 2
-        positionMap[x][y] = distribution[i]
-    plt.figure(1)
-    ax1 = plt.subplot(111)
+        x[i] = sin(i * 2 * math.pi / node) * radius
+        y[i] = cos(i * 2 * math.pi / node) * radius
+
+    plt.figure(1, figsize=(20, 9))
+    ax1 = plt.subplot(121)
     plt.sca(ax1)
-    plt.title('2D distribution of %s steps Quantum Walk in Cicle' % steps)
+    plt.title('Distribution of %s steps Quantum Walk in Cicle' % steps)
     plt.xlabel('X Position')
     plt.ylabel('Y Position')
-    plt.imshow(positionMap)
-    plt.axis([0, 2 * int(radius) + 4, 0, 2 * int(radius) + 4])
-    plt.grid(True)
-    plt.savefig('Fig/QDSC_' + str(steps) + '.png')
+    #   plt.imshow(positionMap)
+    #    plt.axis([0, 2 * int(radius) + 3, 0, 2 * int(radius) + 3])
+    #    plt.grid(True)
+    plt.scatter(x, y, distribution * 2000, c='r', marker='o')
+    plt.subplot(122)
+    plt.plot(distribution)
+    plt.title('Distribution of %s steps QW with Different Shift' % steps)
+    plt.xlabel('Started from 0')
+    plt.ylabel('Probability')
+    # plt.show()
+    plt.savefig('Fig/' + str(figName) + str(steps) + '_' + str(shiftGateNum) + '.png')
     plt.close()
 
     # fig = py.figure()
