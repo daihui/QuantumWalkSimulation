@@ -13,12 +13,12 @@ def QDSPlot(X0, X1, steps, shiftGateNum):
     for step in range(1, steps + 1):
         distributionQDS = QDS.QWDistribution(X0, X1, step, shiftGateNum)
         distributionQW = QDS.QWDistribution(X0, X1, 7 * step, 1)
-        QDS.PlotComp(distributionQDS, distributionQW, step)
+        QDS.PlotComp(distributionQDS, distributionQW, step, 'QDS-VS-QW-H')
 
 
 def QDSCPlot(X0, X1, steps, shiftGateNum, node):
     for step in range(1, steps + 1):
-        distribution = QDS.QWDistribution(X0, X1, step, shiftGateNum, node)
+        distribution = QDS.QWCicleDistribution(X0, X1, step, shiftGateNum, node)
         distributionTrans = QDS.ciclePosiTrans(distribution, step, shiftGateNum)
         QDS.PlotX(distributionTrans, step, 'QDS_CT')
 
@@ -27,9 +27,11 @@ def QDSCPlot(X0, X1, steps, shiftGateNum, node):
 
 def QDSCiclePlot(X0, X1, steps, shiftGateNum, node):
     for step in range(1, steps + 1):
-        distribution = QDS.QWDistribution(X0, X1, step, shiftGateNum, node)
+        distribution = QDS.QWCicleDistribution(X0, X1, step, shiftGateNum, node)
         distributionTrans = QDS.ciclePosiTrans(distribution, step, shiftGateNum)
-        QDS.PlotCicle(distributionTrans, step, shiftGateNum, 'QDSCicle_K9_')
+        QDS.PlotCicle(distributionTrans, step, shiftGateNum, 'QDSCicle_K4_H_')
 
 
-QDSCiclePlot(1 / sqrt(2), 1j / sqrt(2), 25, 3, 9)
+# QDSCiclePlot(1, 0, 10, 2, 4)
+# QDSPlot(1 , 0, 10, 3)
+aniplot = QDS.aniPlot
