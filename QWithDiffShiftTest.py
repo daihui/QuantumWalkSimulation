@@ -34,4 +34,5 @@ def QDSCiclePlot(X0, X1, steps, shiftGateNum, node):
 
 # QDSCiclePlot(1, 0, 10, 2, 4)
 # QDSPlot(1 , 0, 10, 3)
-aniplot = QDS.aniPlot
+# QDS.QWCicleDistrWrite(1, 0, 2000, 3, 8)
+QDS.QWCicleWithPhaseDistrWrite(1, 0, 2000, 2, 5, 2 * pi / 5, 2)

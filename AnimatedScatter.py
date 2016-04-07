@@ -50,7 +50,7 @@ class AnimatedScatterQW(object):
         self.ax1.axis([-4.5, 4.5, -1.5, 1.5])
         self.scat = self.ax1.scatter(x, y, s=d, c='red', marker='o', animated=True)
 
-        self.ax2.axis([1, 100, 0, 1])
+        self.ax2.axis([1, 5000, 0, 1])
         self.line, = self.ax2.plot([], [])
         # For FuncAnimation's sake, we need to return the artist we'll be using
         # Note that it expects a sequence of artists, thus the trailing comma.
@@ -100,7 +100,7 @@ class AnimatedScatterQW(object):
         lineResize.resize(1, self.step)
         # print lineResize[0]
         x = arange(1, self.step + 1)
-        y = lineResize[0]
+        y = lineResize
         # print x,y
         self.line.set_data(x, y)
 
