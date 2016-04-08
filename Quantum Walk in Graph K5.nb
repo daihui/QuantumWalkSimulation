@@ -1,0 +1,681 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[     25108,        672]
+NotebookOptionsPosition[     24822,        658]
+NotebookOutlinePosition[     25167,        673]
+CellTagsIndexPosition[     25124,        670]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+  Cell[BoxData[
+    RowBox[{
+      RowBox[{"(*",
+        RowBox[{
+          RowBox[{
+            RowBox[{"--",
+              RowBox[{"--",
+                RowBox[{"--",
+                  RowBox[{"--",
+                    RowBox[{"--",
+                      RowBox[{"--",
+                        RowBox[{"--",
+                          RowBox[{"--",
+                            RowBox[{"--",
+                              RowBox[{"--",
+                                RowBox[{"--",
+                                  RowBox[{"--",
+                                    RowBox[{"--",
+                                      RowBox[{"--",
+                                        RowBox[{"--",
+                                          RowBox[{"--",
+                                            RowBox[{"--",
+                                              RowBox[{"--",
+                                                RowBox[{"--",
+                                                  RowBox[{"--",
+                                                    RowBox[{"--",
+                                                      RowBox[{"--",
+                                                        RowBox[{"--",
+                                                          RowBox[{
+                                                            "-", "\[IndentingNewLine]",
+                                                            "Quantum"}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}],
+            " ", "Walk", " ", "Matrix", " ",
+            RowBox[{"Simulation", " ", ":", " ",
+              RowBox[{"Graph", " ",
+                RowBox[{"K5", "\[IndentingNewLine]", "--"}],
+                RowBox[{"--",
+                  RowBox[{"--",
+                    RowBox[{"--",
+                      RowBox[{"--",
+                        RowBox[{"--",
+                          RowBox[{"--",
+                            RowBox[{"--",
+                              RowBox[{"--",
+                                RowBox[{"-",
+                                  RowBox[{"-",
+                                    RowBox[{"-",
+                                      RowBox[{"--",
+                                        RowBox[{"--",
+                                          RowBox[{"--",
+                                            RowBox[{"--",
+                                              RowBox[{"--",
+                                                RowBox[{"--",
+                                                  RowBox[{"--",
+                                                    RowBox[{"--",
+                                                      RowBox[{"-",
+                                                        RowBox[{"--",
+                                                          RowBox[{"--",
+                                                            RowBox[{"-",
+                                                              RowBox[{"-",
+                                                                RowBox[{"--",
+                                                                  RowBox[{"--",
+                                                                    RowBox[{"--",
+                                                                      RowBox[{"--",
+                                                                        RowBox[{"--",
+                                                                          RowBox[{"-", "\[IndentingNewLine]",
+                                                                            RowBox[{"Shift", ":", " ",
+                                                                              RowBox[{
+                                                                                "Shift", " ",
+                                                                                "Matrix"}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]}]
+                            }]}]}]}]}]}]}]}]}]}], ",", " ",
+          RowBox[{"Coin", ":", " ",
+            RowBox[{"Coin", " ", "Matrix"}]}], ",", " ",
+          RowBox[{"\[Psi]", ":",
+            RowBox[{"Quantum", " ", "State"}]}], ",", " ",
+          RowBox[{"Posi", ":",
+            RowBox[{"Position", " ", "State"}]}]}], "\[IndentingNewLine]", "*)"}],
+      "\[IndentingNewLine]", "\[IndentingNewLine]",
+      RowBox[{
+        RowBox[{
+          RowBox[{"\[Psi]", "=",
+            RowBox[{
+              RowBox[{"{",
+                RowBox[{
+                  RowBox[{"{", "1", "}"}], ",",
+                  RowBox[{"{", "0", "}"}]}], "}"}], "//", "MatrixForm"}]}], " ", ";"}],
+        "\[IndentingNewLine]",
+        RowBox[{
+          RowBox[{"Posi", "=",
+            RowBox[{
+              RowBox[{"{",
+                RowBox[{
+                  RowBox[{"{", "1", "}"}], ",",
+                  RowBox[{"{", "0", "}"}], ",",
+                  RowBox[{"{", "0", "}"}], ",",
+                  RowBox[{"{", "0", "}"}], ",",
+                  RowBox[{"{", "0", "}"}]}], "}"}], "//", "MatrixForm"}]}], ";"}],
+        "\[IndentingNewLine]",
+        RowBox[{
+          RowBox[{"ShiftMoveOne", "=",
+            RowBox[{
+              RowBox[{"Transpose", "[",
+                RowBox[{"{",
+                  RowBox[{
+                    RowBox[{"{",
+                      RowBox[{
+                        "0", ",", "1", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0",
+                        ",", "0", ",", "0", ",", "0"}], "}"}], ",",
+                    RowBox[{"{",
+                      RowBox[{
+                        "0", ",", "0", ",", "1", ",", "0", ",", "0", ",", "0", ",", "0",
+                        ",", "0", ",", "0", ",", "0"}], "}"}], ",",
+                    RowBox[{"{",
+                      RowBox[{
+                        "0", ",", "0", ",", "0", ",", "1", ",", "0", ",", "0", ",", "0",
+                        ",", "0", ",", "0", ",", "0"}], "}"}], ",",
+                    RowBox[{"{",
+                      RowBox[{
+                        "0", ",", "0", ",", "0", ",", "0", ",", "1", ",", "0", ",", "0",
+                        ",", "0", ",", "0", ",", "0"}], "}"}], ",",
+                    RowBox[{"{",
+                      RowBox[{
+                        "1", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0",
+                        ",", "0", ",", "0", ",", "0"}], "}"}], ",",
+                    RowBox[{"{",
+                      RowBox[{
+                        "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "1",
+                        ",", "0", ",", "0", ",", "0"}], "}"}], ",",
+                    RowBox[{"{",
+                      RowBox[{
+                        "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0",
+                        ",", "1", ",", "0", ",", "0"}], "}"}], ",",
+                    RowBox[{"{",
+                      RowBox[{
+                        "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0",
+                        ",", "0", ",", "1", ",", "0"}], "}"}], ",",
+                    RowBox[{"{",
+                      RowBox[{
+                        "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0",
+                        ",", "0", ",", "0", ",", "1"}], "}"}], ",",
+                    RowBox[{"{",
+                      RowBox[{
+                        "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "1", ",", "0",
+                        ",", "0", ",", "0", ",", "0"}], "}"}]}], "}"}], "]"}], "//",
+              "MatrixForm"}]}], ";"}], "\[IndentingNewLine]",
+        RowBox[{
+          RowBox[{"Shift1", "=",
+            RowBox[{
+              RowBox[{"Transpose", "[",
+                RowBox[{"{",
+                  RowBox[{
+                    RowBox[{"{",
+                      RowBox[{
+                        "1", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0",
+                        ",", "0", ",", "0", ",", "0"}], "}"}], ",",
+                    RowBox[{"{",
+                      RowBox[{
+                        "0", ",", "1", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0",
+                        ",", "0", ",", "0", ",", "0"}], "}"}], ",",
+                    RowBox[{"{",
+                      RowBox[{
+                        "0", ",", "0", ",", "1", ",", "0", ",", "0", ",", "0", ",", "0",
+                        ",", "0", ",", "0", ",", "0"}], "}"}], ",",
+                    RowBox[{"{",
+                      RowBox[{
+                        "0", ",", "0", ",", "0", ",", "1", ",", "0", ",", "0", ",", "0",
+                        ",", "0", ",", "0", ",", "0"}], "}"}], ",",
+                    RowBox[{"{",
+                      RowBox[{
+                        "0", ",", "0", ",", "0", ",", "0", ",", "1", ",", "0", ",", "0",
+                        ",", "0", ",", "0", ",", "0"}], "}"}], ",",
+                    RowBox[{"{",
+                      RowBox[{
+                        "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "1",
+                        ",", "0", ",", "0", ",", "0"}], "}"}], ",",
+                    RowBox[{"{",
+                      RowBox[{
+                        "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0",
+                        ",", "1", ",", "0", ",", "0"}], "}"}], ",",
+                    RowBox[{"{",
+                      RowBox[{
+                        "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0",
+                        ",", "0", ",", "1", ",", "0"}], "}"}], ",",
+                    RowBox[{"{",
+                      RowBox[{
+                        "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0",
+                        ",", "0", ",", "0", ",", "1"}], "}"}], ",",
+                    RowBox[{"{",
+                      RowBox[{
+                        "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "1", ",", "0",
+                        ",", "0", ",", "0", ",", "0"}], "}"}]}], "}"}], "]"}], "//",
+              "MatrixForm"}]}], ";"}], "\[IndentingNewLine]",
+        RowBox[{
+          RowBox[{"Shift2", "=",
+            RowBox[{
+              RowBox[{"Transpose", "[",
+                RowBox[{"{",
+                  RowBox[{
+                    RowBox[{"{",
+                      RowBox[{
+                        "1", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0",
+                        ",", "0", ",", "0", ",", "0"}], "}"}], ",",
+                    RowBox[{"{",
+                      RowBox[{
+                        "0", ",", "1", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0",
+                        ",", "0", ",", "0", ",", "0"}], "}"}], ",",
+                    RowBox[{"{",
+                      RowBox[{
+                        "0", ",", "0", ",", "1", ",", "0", ",", "0", ",", "0", ",", "0",
+                        ",", "0", ",", "0", ",", "0"}], "}"}], ",",
+                    RowBox[{"{",
+                      RowBox[{
+                        "0", ",", "0", ",", "0", ",", "1", ",", "0", ",", "0", ",", "0",
+                        ",", "0", ",", "0", ",", "0"}], "}"}], ",",
+                    RowBox[{"{",
+                      RowBox[{
+                        "0", ",", "0", ",", "0", ",", "0", ",", "1", ",", "0", ",", "0",
+                        ",", "0", ",", "0", ",", "0"}], "}"}], ",",
+                    RowBox[{"{",
+                      RowBox[{
+                        "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0",
+                        ",", "1", ",", "0", ",", "0"}], "}"}], ",",
+                    RowBox[{"{",
+                      RowBox[{
+                        "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0",
+                        ",", "0", ",", "1", ",", "0"}], "}"}], ",",
+                    RowBox[{"{",
+                      RowBox[{
+                        "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0",
+                        ",", "0", ",", "0", ",", "1"}], "}"}], ",",
+                    RowBox[{"{",
+                      RowBox[{
+                        "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "1", ",", "0",
+                        ",", "0", ",", "0", ",", "0"}], "}"}], ",",
+                    RowBox[{"{",
+                      RowBox[{
+                        "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "1",
+                        ",", "0", ",", "0", ",", "0"}], "}"}]}], "}"}], "]"}], "//",
+              "MatrixForm"}]}], ";"}], "\[IndentingNewLine]",
+        RowBox[{
+          RowBox[{"HadamardCoin1", "=",
+            RowBox[{
+              TagBox[
+                RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {
+                    FractionBox["1",
+                      SqrtBox["2"]], "0", "0", "0", "0",
+                    FractionBox["1",
+                      SqrtBox["2"]], "0", "0", "0", "0"},
+                  {"0",
+                    FractionBox["1",
+                      SqrtBox["2"]], "0", "0", "0", "0",
+                    FractionBox["1",
+                      SqrtBox["2"]], "0", "0", "0"},
+                  {"0", "0",
+                    FractionBox["1",
+                      SqrtBox["2"]], "0", "0", "0", "0",
+                    FractionBox["1",
+                      SqrtBox["2"]], "0", "0"},
+                  {"0", "0", "0",
+                    FractionBox["1",
+                      SqrtBox["2"]], "0", "0", "0", "0",
+                    FractionBox["1",
+                      SqrtBox["2"]], "0"},
+                  {"0", "0", "0", "0",
+                    FractionBox["1",
+                      SqrtBox["2"]], "0", "0", "0", "0",
+                    FractionBox["1",
+                      SqrtBox["2"]]},
+                  {
+                    FractionBox["1",
+                      SqrtBox["2"]], "0", "0", "0", "0",
+                    RowBox[{"-",
+                      FractionBox["1",
+                        SqrtBox["2"]]}], "0", "0", "0", "0"},
+                  {"0",
+                    FractionBox["1",
+                      SqrtBox["2"]], "0", "0", "0", "0",
+                    RowBox[{"-",
+                      FractionBox["1",
+                        SqrtBox["2"]]}], "0", "0", "0"},
+                  {"0", "0",
+                    FractionBox["1",
+                      SqrtBox["2"]], "0", "0", "0", "0",
+                    RowBox[{"-",
+                      FractionBox["1",
+                        SqrtBox["2"]]}], "0", "0"},
+                  {"0", "0", "0",
+                    FractionBox["1",
+                      SqrtBox["2"]], "0", "0", "0", "0",
+                    RowBox[{"-",
+                      FractionBox["1",
+                        SqrtBox["2"]]}], "0"},
+                  {"0", "0", "0", "0",
+                    FractionBox["1",
+                      SqrtBox["2"]], "0", "0", "0", "0",
+                    RowBox[{"-",
+                      FractionBox["1",
+                        SqrtBox["2"]]}]}
+                },
+                  GridBoxAlignment -> {
+                    "Columns" -> {{Center}}, "ColumnsIndexed" -> {},
+                    "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+                  GridBoxSpacings -> {"Columns" -> {
+                    Offset[0.27999999999999997`], {
+                      Offset[0.7]},
+                    Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+                    Offset[0.2], {
+                      Offset[0.4]},
+                    Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}],
+                Function[BoxForm`e$,
+                  MatrixForm[BoxForm`e$]]], "//", "MatrixForm"}]}], ";"}],
+        "\[IndentingNewLine]",
+        RowBox[{
+          RowBox[{"HadamardCoin2", "=",
+            RowBox[{
+              TagBox[
+                RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {
+                    FractionBox["1",
+                      SqrtBox["2"]], "0", "0", "0", "0",
+                    FractionBox["1",
+                      SqrtBox["2"]], "0", "0", "0", "0"},
+                  {"0",
+                    FractionBox["1",
+                      SqrtBox["2"]], "0", "0", "0", "0",
+                    FractionBox["1",
+                      SqrtBox["2"]], "0", "0", "0"},
+                  {"0", "0",
+                    FractionBox["1",
+                      SqrtBox["2"]], "0", "0", "0", "0",
+                    FractionBox["1",
+                      SqrtBox["2"]], "0", "0"},
+                  {"0", "0", "0",
+                    FractionBox["1",
+                      SqrtBox["2"]], "0", "0", "0", "0",
+                    FractionBox["1",
+                      SqrtBox["2"]], "0"},
+                  {"0", "0", "0", "0",
+                    FractionBox["1",
+                      SqrtBox["2"]], "0", "0", "0", "0",
+                    FractionBox["1",
+                      SqrtBox["2"]]},
+                  {
+                    FractionBox["1",
+                      SqrtBox["2"]], "0", "0", "0", "0",
+                    RowBox[{"-",
+                      FractionBox["1",
+                        SqrtBox["2"]]}], "0", "0", "0", "0"},
+                  {"0",
+                    FractionBox["1",
+                      SqrtBox["2"]], "0", "0", "0", "0",
+                    RowBox[{"-",
+                      FractionBox["1",
+                        SqrtBox["2"]]}], "0", "0", "0"},
+                  {"0", "0",
+                    FractionBox["1",
+                      SqrtBox["2"]], "0", "0", "0", "0",
+                    RowBox[{"-",
+                      FractionBox["1",
+                        SqrtBox["2"]]}], "0", "0"},
+                  {"0", "0", "0",
+                    FractionBox["1",
+                      SqrtBox["2"]], "0", "0", "0", "0",
+                    RowBox[{"-",
+                      FractionBox["1",
+                        SqrtBox["2"]]}], "0"},
+                  {"0", "0", "0", "0",
+                    FractionBox["1",
+                      SqrtBox["2"]], "0", "0", "0", "0",
+                    RowBox[{"-",
+                      FractionBox["1",
+                        SqrtBox["2"]]}]}
+                },
+                  GridBoxAlignment -> {
+                    "Columns" -> {{Center}}, "ColumnsIndexed" -> {},
+                    "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+                  GridBoxSpacings -> {"Columns" -> {
+                    Offset[0.27999999999999997`], {
+                      Offset[0.7]},
+                    Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+                    Offset[0.2], {
+                      Offset[0.4]},
+                    Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}],
+                Function[BoxForm`e$,
+                  MatrixForm[BoxForm`e$]]], "//", "MatrixForm"}]}], ";"}],
+        "\[IndentingNewLine]",
+        RowBox[{
+          RowBox[{"I2", "=",
+            RowBox[{
+              RowBox[{"{",
+                RowBox[{
+                  RowBox[{"{",
+                    RowBox[{"1", ",", "0"}], "}"}], ",",
+                  RowBox[{"{",
+                    RowBox[{"0", ",", "1"}], "}"}]}], "}"}], "//", "MatrixForm"}]}],
+          ";"}], "\[IndentingNewLine]",
+        RowBox[{
+          RowBox[{"I5", "=",
+            RowBox[{
+              RowBox[{"{",
+                RowBox[{
+                  RowBox[{"{",
+                    RowBox[{"1", ",", "0", ",", "0", ",", "0", ",", "0"}], "}"}], ",",
+                  RowBox[{"{",
+                    RowBox[{"0", ",", "1", ",", "0", ",", "0", ",", "0"}], "}"}], ",",
+                  RowBox[{"{",
+                    RowBox[{"0", ",", "0", ",", "1", ",", "0", ",", "0"}], "}"}], ",",
+                  RowBox[{"{",
+                    RowBox[{"0", ",", "0", ",", "0", ",", "1", ",", "0"}], "}"}], ",",
+                  RowBox[{"{",
+                    RowBox[{"0", ",", "0", ",", "0", ",", "0", ",", "1"}], "}"}]}],
+                "}"}], "//", "MatrixForm"}]}], ";"}], "\[IndentingNewLine]",
+        RowBox[{
+          RowBox[{
+            RowBox[{"PhaseCoin", "[", "Psi_", "]"}], ":=",
+            RowBox[{
+              TagBox[
+                RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {"1", "0", "0", "0", "0", "0", "0", "0", "0", "0"},
+                  {"0", "1", "0", "0", "0", "0", "0", "0", "0", "0"},
+                  {"0", "0", "1", "0", "0", "0", "0", "0", "0", "0"},
+                  {"0", "0", "0", "1", "0", "0", "0", "0", "0", "0"},
+                  {"0", "0", "0", "0", "1", "0", "0", "0", "0", "0"},
+                  {"0", "0", "0", "0", "0",
+                    SuperscriptBox["\[ExponentialE]",
+                      RowBox[{"\[ImaginaryI]", " ", "Psi"}]], "0", "0", "0", "0"},
+                  {"0", "0", "0", "0", "0", "0",
+                    SuperscriptBox["\[ExponentialE]",
+                      RowBox[{"\[ImaginaryI]", " ", "Psi"}]], "0", "0", "0"},
+                  {"0", "0", "0", "0", "0", "0", "0",
+                    SuperscriptBox["\[ExponentialE]",
+                      RowBox[{"\[ImaginaryI]", " ", "Psi"}]], "0", "0"},
+                  {"0", "0", "0", "0", "0", "0", "0", "0",
+                    SuperscriptBox["\[ExponentialE]",
+                      RowBox[{"\[ImaginaryI]", " ", "Psi"}]], "0"},
+                  {"0", "0", "0", "0", "0", "0", "0", "0", "0",
+                    SuperscriptBox["\[ExponentialE]",
+                      RowBox[{"\[ImaginaryI]", " ", "Psi"}]]}
+                },
+                  GridBoxAlignment -> {
+                    "Columns" -> {{Center}}, "ColumnsIndexed" -> {},
+                    "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+                  GridBoxSpacings -> {"Columns" -> {
+                    Offset[0.27999999999999997`], {
+                      Offset[0.7]},
+                    Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+                    Offset[0.2], {
+                      Offset[0.4]},
+                    Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}],
+                Function[BoxForm`e$,
+                  MatrixForm[BoxForm`e$]]], "//", "MatrixForm"}]}], ";"}],
+        "\[IndentingNewLine]",
+        RowBox[{
+          RowBox[{"\[Phi]", "=",
+            RowBox[{
+              TagBox[
+                RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {"1"},
+                  {"0"},
+                  {"0"},
+                  {"0"},
+                  {"0"},
+                  {"0"},
+                  {"0"},
+                  {"0"},
+                  {"0"},
+                  {"0"}
+                },
+                  GridBoxAlignment -> {
+                    "Columns" -> {{Center}}, "ColumnsIndexed" -> {},
+                    "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+                  GridBoxSpacings -> {"Columns" -> {
+                    Offset[0.27999999999999997`], {
+                      Offset[0.7]},
+                    Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+                    Offset[0.2], {
+                      Offset[0.4]},
+                    Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}],
+                Function[BoxForm`e$,
+                  MatrixForm[BoxForm`e$]]], "//", "MatrixForm"}]}], ";"}],
+        "\[IndentingNewLine]",
+        RowBox[{"(*",
+          RowBox[{
+            "\:5b9a\:4e49K5\:7684\:53d8\:6362\:77e9\:9635U", ",",
+            "\:4ee5\:53ca\:5e26\:76f8\:4f4dcoin\:7684UPhase"}], "*)"}],
+        "\[IndentingNewLine]",
+        RowBox[{
+          RowBox[{"U", "=",
+            RowBox[{
+              RowBox[{
+                "ShiftMoveOne", ".", "Shift2", ".", "HadamardCoin2", ".", "Shift1", ".",
+                "HadamardCoin1"}], "//", "MatrixForm"}]}], ";"}],
+        "\[IndentingNewLine]",
+        RowBox[{
+          RowBox[{
+            RowBox[{"UPhase", "[", "Psi_", "]"}], ":=",
+            RowBox[{
+              RowBox[{"ShiftMoveOne", ".",
+                RowBox[{"PhaseCoin", "[", "Psi", "]"}], ".", "Shift2", ".",
+                "HadamardCoin2", ".", "Shift1", ".", "HadamardCoin1"}], "//",
+              "MatrixForm"}]}], ";"}], "\[IndentingNewLine]",
+        RowBox[{"(*",
+          RowBox[{
+            RowBox[{"\:5b9a\:4e49QuantumWalkK5", " ", "\:51fd\:6570"}], "\:ff0c",
+            "\:53c2\:6570\:4e3a\:6b65\:6570", "\:ff0c",
+            RowBox[{
+              "\:7ed9\:51fa\:4f4d\:7f6e\:6001", "\[IndentingNewLine]",
+              "\:5b9a\:4e49QuantumWalkK5Phase", " ", "\:51fd\:6570"}], "\:ff0c",
+            "\:53c2\:6570\:4e3a\:6b65\:6570", "\:ff0c", "\:53ca\:76f8\:4f4dPsi", ",",
+            " ",
+            RowBox[{
+              RowBox[{"marked", " ", "line", " ", "\:4e3a"}], "+",
+              RowBox[{"2", "\:7ed9\:51fa\:4f4d\:7f6e\:6001"}]}]}],
+          "\[IndentingNewLine]", "*)"}], "\[IndentingNewLine]",
+        RowBox[{"Clear", "[", "QuantumWalkK5", "]"}], "\[IndentingNewLine]",
+        RowBox[{"Clear", "[", "QuantumWalkK5Phase", "]"}], "\[IndentingNewLine]",
+        RowBox[{
+          RowBox[{
+            RowBox[{"QuantumWalkK5", "[", "0", "]"}], "=",
+            RowBox[{
+              TagBox[
+                RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {"1"},
+                  {"0"},
+                  {"0"},
+                  {"0"},
+                  {"0"},
+                  {"0"},
+                  {"0"},
+                  {"0"},
+                  {"0"},
+                  {"0"}
+                },
+                  GridBoxAlignment -> {
+                    "Columns" -> {{Center}}, "ColumnsIndexed" -> {},
+                    "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+                  GridBoxSpacings -> {"Columns" -> {
+                    Offset[0.27999999999999997`], {
+                      Offset[0.7]},
+                    Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+                    Offset[0.2], {
+                      Offset[0.4]},
+                    Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}],
+                Function[BoxForm`e$,
+                  MatrixForm[BoxForm`e$]]], "//", "MatrixForm"}]}], ";"}],
+        "\[IndentingNewLine]", "\[IndentingNewLine]",
+        RowBox[{
+          RowBox[{
+            RowBox[{"QuantumWalkK5", "[", "steps_", "]"}], ":=", " ",
+            RowBox[{
+              RowBox[{"QuantumWalkK5", "[", "steps", "]"}], "=",
+              RowBox[{
+                RowBox[{"U", ".",
+                  RowBox[{"QuantumWalkK5", "[",
+                    RowBox[{"steps", "-", "1"}], "]"}]}], "//", "MatrixForm"}]}]}],
+          ";"}], "\[IndentingNewLine]",
+        RowBox[{
+          RowBox[{
+            RowBox[{"QuantumWalkK5Phase", "[",
+              RowBox[{"0", ",", "Psi_"}], "]"}], "=",
+            RowBox[{
+              TagBox[
+                RowBox[{"(", "\[NoBreak]", GridBox[{
+                  {"1"},
+                  {"0"},
+                  {"0"},
+                  {"0"},
+                  {"0"},
+                  {"0"},
+                  {"0"},
+                  {"0"},
+                  {"0"},
+                  {"0"}
+                },
+                  GridBoxAlignment -> {
+                    "Columns" -> {{Center}}, "ColumnsIndexed" -> {},
+                    "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+                  GridBoxSpacings -> {"Columns" -> {
+                    Offset[0.27999999999999997`], {
+                      Offset[0.7]},
+                    Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+                    Offset[0.2], {
+                      Offset[0.4]},
+                    Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}],
+                Function[BoxForm`e$,
+                  MatrixForm[BoxForm`e$]]], "//", "MatrixForm"}]}], ";"}],
+        "\[IndentingNewLine]",
+        RowBox[{
+          RowBox[{
+            RowBox[{"QuantumWalkK5Phase", "[",
+              RowBox[{"steps_", ",", "Psi_"}], "]"}], ":=",
+            RowBox[{
+              RowBox[{"QuantumWalkK5Phase", "[", "steps", "]"}], "=",
+              RowBox[{
+                RowBox[{
+                  RowBox[{"UPhase", "[", "Psi", "]"}], ".",
+                  RowBox[{"QuantumWalkK5Phase", "[",
+                    RowBox[{
+                      RowBox[{"steps", "-", "1"}], ",", "Psi"}], "]"}]}], "//",
+                "MatrixForm"}]}]}], ";"}], "\[IndentingNewLine]"}]}]], "Input",
+    CellChangeTimes -> {{3.6690867707743993`*^9, 3.6690868112430534`*^9}, {
+      3.669086870588075*^9, 3.6690869893622427`*^9}, {3.669087024571819*^9,
+      3.6690872861065645`*^9}, {3.6690873588917885`*^9, 3.669087360294672*^9}, {
+      3.6690874572237663`*^9, 3.6690875662601657`*^9}, 3.66908761280852*^9, {
+      3.6690879686862674`*^9, 3.6690880074249277`*^9}, {3.669088101217921*^9,
+      3.669088325461237*^9}, {3.669088372852105*^9, 3.6690883832183523`*^9},
+      3.669088439952918*^9, {3.6690903232998047`*^9, 3.669090337348643*^9}, {
+        3.669090647371254*^9, 3.6690907254245033`*^9}, {3.669090757321968*^9,
+        3.6690908128498917`*^9}, {3.6690908635229907`*^9,
+        3.6690909049929028`*^9}, {3.6690910358752174`*^9, 3.669091053235268*^9}, {
+        3.6690911836810856`*^9, 3.669091186232604*^9}, {3.669091230074918*^9,
+        3.6690912895373955`*^9}, {3.6690913636040154`*^9,
+        3.6690913721966267`*^9}, {3.6690915232129154`*^9, 3.669091600249637*^9}, {
+        3.6690918844111853`*^9, 3.669091892388918*^9}, {3.6690919879595594`*^9,
+        3.669092094729249*^9}, {3.669092861613515*^9, 3.669092928186165*^9}, {
+        3.6690932126519856`*^9, 3.6690932138551655`*^9}, {3.669093308117559*^9,
+        3.669093343365827*^9}, {3.669093400664897*^9, 3.6690934287682705`*^9}, {
+        3.669093489593053*^9, 3.669093521182536*^9}, 3.6690936298262887`*^9, {
+        3.669093743147219*^9, 3.669093756912764*^9}, {3.669094017258934*^9,
+        3.6690940477867365`*^9}, {3.669094129593167*^9, 3.6690942150325317`*^9}, {
+        3.6690943231927776`*^9, 3.669094383961775*^9}, {3.6690944155374827`*^9,
+        3.6690944614739485`*^9}, {3.6690945038518915`*^9,
+        3.6690945061217413`*^9}, {3.6690945372191963`*^9,
+        3.6690945491942263`*^9}, {3.6690945962530174`*^9, 3.669094787308114*^9},
+      3.6690948934357414`*^9, {3.6690949417288847`*^9, 3.6690949461002207`*^9}, {
+        3.6690949866302967`*^9, 3.669095007383213*^9}, {3.669095895784773*^9,
+        3.669095898858717*^9}, {3.6690959637508683`*^9, 3.6690959701081066`*^9}, {
+        3.669096159997595*^9, 3.669096216510341*^9}, {3.669096273678705*^9,
+        3.6690962918294325`*^9}}],
+
+  Cell[BoxData[
+    RowBox[{"QuantumWalkK5Phase", "[",
+      RowBox[{"2", ",",
+        RowBox[{"Pi", "/", "2"}]}], "]"}]], "Input",
+    CellChangeTimes -> {{3.66909481424232*^9, 3.6690948292998123`*^9}, {
+      3.66909603811162*^9, 3.6690960383271446`*^9}, {3.669096352675271*^9,
+      3.669096352944249*^9}}]
+},
+  WindowSize -> {851, 514},
+  WindowMargins -> {{100, Automatic}, {Automatic, 29}},
+  FrontEndVersion -> "8.0 for Microsoft Windows (64-bit) (November 7, 2010)",
+  StyleDefinitions -> "Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[557, 20, 23973, 628, 2094, "Input"],
+Cell[24533, 650, 285, 6, 31, "Input"]
+}
+]
+*)
+
+(* End of internal cache information *)

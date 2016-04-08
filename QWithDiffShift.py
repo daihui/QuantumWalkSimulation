@@ -156,14 +156,21 @@ def shiftCicleOperator(positionMap, step, shiftGateNum, node):
     return newPositionMap
 
 
-# 加入phase coin 版本
-def shiftCicleWithPhaseOperator(positionMap, step, shiftGateNum, node, Psi, gate):
+# 加入phase coin 版本, 修正移位操作，实现complete graph
+def shiftCicleWithPhaseOperator(positionMap, step, shiftGateNum, node, Psi, phaseGate):
+    # 先整体走一步
+    moveOne = positionMap.copy()
+    for i in range(1, node):
+        positionMap[i] = moveOne[i - 1]
+    positionMap[0] = moveOne[node - 1]
+
+    # 根据延时门再各自走对应步数
     for shiftNum in range(1, shiftGateNum + 1):
         newPositionMap = positionCicleMap(node)
         HadamardCoin = hadamardCoin()
         PhaseCoin = phaseCoin(Psi)
         coinMap = coinOperator(HadamardCoin, positionMap)
-        if shiftNum == gate:
+        if shiftNum == phaseGate:
             newMap = coinMap.copy()
             coinMap = coinOperator(PhaseCoin, newMap)
             print 'gate:%s phase coin' % shiftNum
@@ -188,6 +195,9 @@ def quantumWalkCicle(X0, X1, steps, shiftGateNum, node):
     return initPositionMap
 
 
+'''
+Release 1, for animate plotting
+'''
 # 计算概率分布
 def QWCicleDistribution(X0, X1, steps, shiftGateNum, node):
     positionMap = quantumWalkCicle(X0, X1, steps, shiftGateNum, node)
@@ -202,6 +212,9 @@ def QWCicleDistribution(X0, X1, steps, shiftGateNum, node):
     return distribution
 
 
+'''
+Release 2 : for write data to txt file
+'''
 # quantum walk in cycle graph release for write data to txt file(直接将每一步的态与分布写到文件保存)
 def QWCicleDistrWrite(X0, X1, steps, shiftGateNum, node):
     print 'begin'
@@ -234,6 +247,12 @@ def QWCicleDistrWrite(X0, X1, steps, shiftGateNum, node):
     print 'finish'
 
 
+'''
+Release 3 : add phase coin and modified for complete graph
+'''
+
+
+# quantum walk in cycle graph release for phase coin (添加phase coin，对shift operator进行了修正)
 def QWCicleWithPhaseDistrWrite(X0, X1, steps, shiftGateNum, node, Psi, gate):
     print 'begin'
     initPositionMap = zeros([node, 2, 1], complex)
