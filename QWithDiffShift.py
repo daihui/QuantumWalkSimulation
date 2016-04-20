@@ -133,6 +133,12 @@ def PlotComp(distributionQDS, distributionQW, step, figName):
 # -------------------------------------------
 # Quantum walk in cicle with different shift
 # -------------------------------------------
+def initQuanStatAverPosiCicle(X0, X1, Node):
+    initQuanStat = zeros([Node, 2, 1], complex)
+    for node in range(Node):
+        initQuanStat[node][0][0] = X0 * 1 / sqrt(Node)
+        initQuanStat[node][1][0] = X1 * 1 / sqrt(Node)
+    return initQuanStat
 
 def positionCicleMap(node):
     positionCicleMap = zeros([node, 2, 1], complex)
@@ -183,6 +189,93 @@ def shiftCicleWithPhaseOperator(positionMap, step, shiftGateNum, node, Psi, phas
                 newPositionMap[i + power(2, shiftNum - 1)][1][0] += coinMap[i][1][0]
         positionMap = newPositionMap
     return newPositionMap
+
+
+# phase coin ，complete graph with loop
+def shiftCicleWithPhaseLoopOperator(positionMap, step, shiftGateNum, node, Psi, phaseGate):
+    # 根据延时门各自走对应步数
+    for shiftNum in range(1, shiftGateNum + 1):
+        newPositionMap = positionCicleMap(node)
+        HadamardCoin = hadamardCoin()
+        PhaseCoin = phaseCoin(Psi)
+        coinMap = coinOperator(HadamardCoin, positionMap)
+        if shiftNum == phaseGate:
+            newMap = coinMap.copy()
+            coinMap = coinOperator(PhaseCoin, newMap)
+            print 'gate:%s phase coin' % shiftNum
+        for i in range(node):
+            newPositionMap[i][0][0] += coinMap[i][0][0]
+            if (i + power(2, shiftNum - 1) >= node):
+                newPositionMap[i + power(2, shiftNum - 1) - node][1][0] += coinMap[i][1][0]
+                # print('loop')
+            else:
+                newPositionMap[i + power(2, shiftNum - 1)][1][0] += coinMap[i][1][0]
+        positionMap = newPositionMap
+    return newPositionMap
+
+
+# search position with marked coin ，complete graph with loop for 2 gate,4 node
+def shiftCicleWithPhaseLoopSearchOperator(positionMap, step, shiftGateNum, node, Psi, phaseGate):
+    # 根据延时门各自走对应步数
+    for shiftNum in range(1, shiftGateNum + 1):
+        newPositionMap = positionCicleMap(node)
+        HadamardCoin = hadamardCoin()
+        # PhaseCoin = phaseCoin(Psi)
+        coinMap = coinOperator(HadamardCoin, positionMap)
+        if shiftNum == phaseGate:
+            # print 'gate:%s phase coin' % shiftNum
+            newPositionMap[0][0][0] += coinMap[0][0][0]
+            newPositionMap[4][1][0] += coinMap[0][1][0] * exp(1j * Psi)
+            newPositionMap[4][0][0] += coinMap[4][0][0]
+            newPositionMap[0][1][0] += coinMap[4][1][0] * exp(1j * Psi)
+            for i in range(1, node):
+                if i == 4:
+                    print i
+                else:
+                    newPositionMap[i][0][0] += coinMap[i][0][0]
+                    if (i + power(2, shiftNum - 1) >= node):
+                        newPositionMap[i + power(2, shiftNum - 1) - node][1][0] += coinMap[i][1][0]
+                        # print('loop')
+                    else:
+                        newPositionMap[i + power(2, shiftNum - 1)][1][0] += coinMap[i][1][0]
+        else:
+            for i in range(node):
+                newPositionMap[i][0][0] += coinMap[i][0][0]
+                if (i + power(2, shiftNum - 1) >= node):
+                    newPositionMap[i + power(2, shiftNum - 1) - node][1][0] += coinMap[i][1][0]
+                # print('loop')
+                else:
+                    newPositionMap[i + power(2, shiftNum - 1)][1][0] += coinMap[i][1][0]
+        positionMap = newPositionMap
+    return newPositionMap
+
+
+# search position with marked point 0，实现complete graph
+def shiftCicleWithPhaseSearchOperator(positionMap, step, shiftGateNum, node, Psi, phaseGate):
+    # 先整体走一步
+    moveOne = positionMap.copy()
+    for i in range(1, node):
+        positionMap[i] = moveOne[i - 1]
+    positionMap[0] = moveOne[node - 1]
+
+    # 根据延时门再各自走对应步数
+    for shiftNum in range(1, shiftGateNum + 1):
+        newPositionMap = positionCicleMap(node)
+        HadamardCoin = hadamardCoin()
+        # PhaseCoin = phaseCoin(Psi)
+        coinMap = coinOperator(HadamardCoin, positionMap)
+        for i in range(node):
+            newPositionMap[i][0][0] += coinMap[i][0][0]
+            if (i + power(2, shiftNum - 1) >= node):
+                newPositionMap[i + power(2, shiftNum - 1) - node][1][0] += coinMap[i][1][0]
+                # print('loop')
+            else:
+                newPositionMap[i + power(2, shiftNum - 1)][1][0] += coinMap[i][1][0]
+        positionMap = newPositionMap
+    # 标记点0，附加一个Psi的相位
+    newPositionMap[0] = newPositionMap[0] * exp(1j * Psi)
+    return newPositionMap
+
 
 # quantum walk 的整体封装，返回位置分布的量子态
 def quantumWalkCicle(X0, X1, steps, shiftGateNum, node):
@@ -250,13 +343,64 @@ def QWCicleDistrWrite(X0, X1, steps, shiftGateNum, node):
 '''
 Release 3 : add phase coin and modified for complete graph
 '''
-
-
 # quantum walk in cycle graph release for phase coin (添加phase coin，对shift operator进行了修正)
 def QWCicleWithPhaseDistrWrite(X0, X1, steps, shiftGateNum, node, Psi, gate):
     print 'begin'
     initPositionMap = zeros([node, 2, 1], complex)
     initPositionMap[0] = initQuanStat(X0, X1)
+    # initPositionMap = initQuanStatAverPosiCicle(X0, X1,node)
+    PositionPsiFilename = 'Data/K5_X0' + str(X0) + '_X1' + str(X1) + '_' + str(shiftGateNum) + '-' + str(
+        node) + '_Steps' + str(steps) + '.txt'
+    PosiFile = open(PositionPsiFilename, 'a')
+    # DsitriFilename = 'Data/' + time.strftime('%Y%m%d-%H-%M-%S') + '_Position_' + str(shiftGateNum) + \
+    #                  str(node) + str(steps) + '.txt'
+    # StateFilename = 'Data/' + time.strftime('%Y%m%d-%H-%M-%S') + '_State_' + str(shiftGateNum) + \
+    #                 str(node) + str(steps) + '.txt'
+    # distrFile = open(DsitriFilename, 'w+')
+    # stateFile = open(StateFilename, 'w+')
+    # infoS = 'State: X0 %s X1 %s, steps: %s, shiftGateNum: %s, node: %s, Psi: %s, gate: %s\n' % (
+    # X0, X1, steps, shiftGateNum, node, Psi, gate)
+    # infoD = 'State: X0 %s X1 %s, steps: %s, shiftGateNum: %s, node: %s, Psi: %s, gate: %s \n' % (
+    # X0, X1, steps, shiftGateNum, node, Psi, gate)
+    # stateFile.write(infoS)
+    # distrFile.write(infoD)
+    for step in range(1, steps + 1):
+        print 'step: %s' % step
+        positionMap = initPositionMap
+        initPositionMap = shiftCicleWithPhaseOperator(positionMap, step, shiftGateNum, node, Psi, gate)
+        dimension = shape(initPositionMap)[0]
+        distribution = zeros([dimension], dtype=float)
+        sum = 0.0
+        PosiFile.write(str(Psi) + '\t')
+        PosiFile.write(str(step) + '\t')
+        for i in range(dimension):
+            distribution[i] = float(initPositionMap[i][0][0].real ** 2 + initPositionMap[i][0][0].imag ** 2 + \
+                                    initPositionMap[i][1][0].real ** 2 + initPositionMap[i][1][0].imag ** 2)
+            sum += distribution[i]
+            PosiFile.write(str(distribution[i]) + '\t')
+            # stateFile.write(str(initPositionMap[i][0][0]) + str(initPositionMap[i][1][0]) + '\t')
+            # distrFile.write(str(distribution[i]) + '\t')
+        PosiFile.write('\n')
+        print('sum: %s') % sum
+    # distrFile.write('\n')
+    #     stateFile.write('\n')
+    # stateFile.close()
+    # distrFile.close()
+    PosiFile.close()
+    print 'finish'
+
+
+'''
+Release 4 : add phase coin and modified for complete graph with loop
+'''
+
+
+# quantum walk in cycle graph with loop release for phase coin
+def QWCicleWithPhaseLoopDistrWrite(X0, X1, steps, shiftGateNum, node, Psi, gate):
+    print 'begin'
+    initPositionMap = zeros([node, 2, 1], complex)
+    initPositionMap[0] = initQuanStat(X0, X1)
+    #initPositionMap=initQuanStatAverPosiCicle(X0,X1,node)
     DsitriFilename = 'Data/' + time.strftime('%Y%m%d-%H-%M-%S') + '_Position_' + str(shiftGateNum) + \
                      str(node) + str(steps) + '.txt'
     StateFilename = 'Data/' + time.strftime('%Y%m%d-%H-%M-%S') + '_State_' + str(shiftGateNum) + \
@@ -272,7 +416,7 @@ def QWCicleWithPhaseDistrWrite(X0, X1, steps, shiftGateNum, node, Psi, gate):
     for step in range(1, steps + 1):
         print 'step: %s' % step
         positionMap = initPositionMap
-        initPositionMap = shiftCicleWithPhaseOperator(positionMap, step, shiftGateNum, node, Psi, gate)
+        initPositionMap = shiftCicleWithPhaseLoopOperator(positionMap, step, shiftGateNum, node, Psi, gate)
         dimension = shape(initPositionMap)[0]
         distribution = zeros([dimension], dtype=float)
         sum = 0.0
@@ -289,6 +433,126 @@ def QWCicleWithPhaseDistrWrite(X0, X1, steps, shiftGateNum, node, Psi, gate):
     distrFile.close()
     print 'finish'
 
+
+'''
+Release 5 : add phase coin and modified for complete graph with loop, write position
+            probability file with Psi
+'''
+
+
+# quantum walk in cycle graph with loop release for phase coin
+def QWCicleWithPhaseLoopDistrWritePosi(X0, X1, steps, shiftGateNum, node, Psi, gate):
+    print 'begin'
+    initPositionMap = zeros([node, 2, 1], complex)
+    # initPositionMap[0] = initQuanStat(X0, X1)
+    initPositionMap = initQuanStatAverPosiCicle(X0, X1, node)
+    PositionPsiFilename = 'Data/Loop_X0' + str(X0) + '_X1' + str(X1) + '_' + str(shiftGateNum) + '-' + str(
+        node) + '_Steps' + str(steps) + 'Aver.txt'
+    PosiFile = open(PositionPsiFilename, 'a')
+    for step in range(1, steps + 1):
+        print 'step: %s' % step
+        positionMap = initPositionMap
+        initPositionMap = shiftCicleWithPhaseLoopOperator(positionMap, step, shiftGateNum, node, Psi, gate)
+        dimension = shape(initPositionMap)[0]
+        distribution = zeros([dimension], dtype=float)
+        sum = 0.0
+        for i in range(dimension):
+            distribution[i] = float(initPositionMap[i][0][0].real ** 2 + initPositionMap[i][0][0].imag ** 2 + \
+                                    initPositionMap[i][1][0].real ** 2 + initPositionMap[i][1][0].imag ** 2)
+            sum += distribution[i]
+            if i == 0:
+                PosiFile.write(str(Psi) + '\t')
+                PosiFile.write(str(step) + '\t')
+                PosiFile.write(str(distribution[i]) + '\n')
+        print('sum: %s') % sum
+    PosiFile.close()
+    print 'finish'
+
+
+'''
+Release 6 : Search one position by marked in complete graph with loop
+'''
+
+
+# quantum walk search in cycle graph with loop
+def QWCicleWithPhaseLoopSearch(X0, X1, steps, shiftGateNum, node, Psi, gate):
+    print 'begin'
+    initPositionMap = zeros([node, 2, 1], complex)
+    initPositionMap[0] = initQuanStat(X0, X1)
+    # initPositionMap=initQuanStatAverPosiCicle(X0,X1,node)
+    # DsitriFilename = 'Data/' + time.strftime('%Y%m%d-%H-%M-%S') + '_Search_Position_' + str(shiftGateNum) + \
+    #                  str(node) + str(steps) + '.txt'
+    # StateFilename = 'Data/' + time.strftime('%Y%m%d-%H-%M-%S') + '_Search_State_' + str(shiftGateNum) + \
+    #                 str(node) + str(steps) + '.txt'
+    # distrFile = open(DsitriFilename, 'w+')
+    # stateFile = open(StateFilename, 'w+')
+    # infoS = 'Search State: X0 %s X1 %s, steps: %s, shiftGateNum: %s, node: %s, Psi: %s, gate: %s\n' % (
+    # X0, X1, steps, shiftGateNum, node, Psi, gate)
+    # infoD = 'Search State: X0 %s X1 %s, steps: %s, shiftGateNum: %s, node: %s, Psi: %s, gate: %s \n' % (
+    # X0, X1, steps, shiftGateNum, node, Psi, gate)
+    # stateFile.write(infoS)
+    # distrFile.write(infoD)
+    PositionPsiFilename = 'Data/Loop_Search_X0' + str(X0) + '_X1' + str(X1) + '_' + str(shiftGateNum) + '-' + str(
+        node) + '_Steps' + str(steps) + '.txt'
+    PosiFile = open(PositionPsiFilename, 'a')
+    for step in range(1, steps + 1):
+        print 'step: %s' % step
+        positionMap = initPositionMap
+        initPositionMap = shiftCicleWithPhaseLoopSearchOperator(positionMap, step, shiftGateNum, node, Psi, gate)
+        dimension = shape(initPositionMap)[0]
+        distribution = zeros([dimension], dtype=float)
+        sum = 0.0
+        for i in range(dimension):
+            distribution[i] = float(initPositionMap[i][0][0].real ** 2 + initPositionMap[i][0][0].imag ** 2 + \
+                                    initPositionMap[i][1][0].real ** 2 + initPositionMap[i][1][0].imag ** 2)
+            sum += distribution[i]
+            if i == 1:
+                PosiFile.write(str(Psi) + '\t')
+                PosiFile.write(str(step) + '\t')
+                PosiFile.write(str(distribution[i]) + '\n')
+                # stateFile.write(str(initPositionMap[i][0][0]) + str(initPositionMap[i][1][0]) + '\t')
+                # distrFile.write(str(distribution[i]) + '\t')
+        print('sum: %s') % sum
+    # distrFile.write('\n')
+    #     stateFile.write('\n')
+    # stateFile.close()
+    # distrFile.close()
+    PosiFile.close()
+    print 'finish'
+
+
+'''
+Release 7 : Search one position by marked in complete graph
+'''
+
+
+# quantum walk in cycle graph release for phase coin (添加phase coin，对shift operator进行了修正)
+def QWCicleWithPhaseSearch(X0, X1, steps, shiftGateNum, node, Psi, gate):
+    print 'begin'
+    initPositionMap = zeros([node, 2, 1], complex)
+    # initPositionMap[0] = initQuanStat(X0, X1)
+    initPositionMap = initQuanStatAverPosiCicle(X0, X1, node)
+    PositionPsiFilename = 'Data/Search mark_0 X0' + str(X0) + '_X1' + str(X1) + '_' + str(shiftGateNum) + '-' + str(
+        node) + '_Steps' + str(steps) + 'Aver.txt'
+    PosiFile = open(PositionPsiFilename, 'a')
+    for step in range(1, steps + 1):
+        print 'step: %s' % step
+        positionMap = initPositionMap
+        initPositionMap = shiftCicleWithPhaseSearchOperator(positionMap, step, shiftGateNum, node, Psi, gate)
+        dimension = shape(initPositionMap)[0]
+        distribution = zeros([dimension], dtype=float)
+        sum = 0.0
+        PosiFile.write(str(Psi) + '\t')
+        PosiFile.write(str(step) + '\t')
+        for i in range(dimension):
+            distribution[i] = float(initPositionMap[i][0][0].real ** 2 + initPositionMap[i][0][0].imag ** 2 + \
+                                    initPositionMap[i][1][0].real ** 2 + initPositionMap[i][1][0].imag ** 2)
+            sum += distribution[i]
+            PosiFile.write(str(distribution[i]) + '\t')
+        print('sum: %s') % sum
+        PosiFile.write('\n')
+    PosiFile.close()
+    print 'finish'
 
 # 对位置列表进行位移，使原点保持不变
 #TODO 位置变换有点问题，暂时不用
