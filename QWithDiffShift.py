@@ -251,7 +251,7 @@ def shiftCicleWithPhaseLoopSearchOperator(positionMap, step, shiftGateNum, node,
 
 
 # search position with marked point 0，实现complete graph
-def shiftCicleWithPhaseSearchOperator(positionMap, step, shiftGateNum, node, Psi, phaseGate):
+def shiftCicleWithPhaseSearchOperator(positionMap, step, shiftGateNum, node, Psi):
     # 先整体走一步
     moveOne = positionMap.copy()
     for i in range(1, node):
@@ -273,18 +273,31 @@ def shiftCicleWithPhaseSearchOperator(positionMap, step, shiftGateNum, node, Psi
                 newPositionMap[i + power(2, shiftNum - 1)][1][0] += coinMap[i][1][0]
         positionMap = newPositionMap
     # 标记点0，附加一个Psi的相位
-    newPositionMap[0] = newPositionMap[0] * exp(1j * Psi)
+    newPositionMap[0][0][0] = newPositionMap[0][0][0] * exp(1j * Psi)
+    newPositionMap[1][0][0] = newPositionMap[1][0][0] * exp(1j * Psi)
+    # if step%2==1:
+    #     newPositionMap[0] = newPositionMap[0] * exp(1j * Psi)
+    #     print step
     return newPositionMap
 
 
 # quantum walk 的整体封装，返回位置分布的量子态
-def quantumWalkCicle(X0, X1, steps, shiftGateNum, node):
+def quantumWalkCicle(X0, X1, steps, shiftGateNum, node, Phase):
+    # print 'begin'
+    # initPositionMap = zeros([node, 2, 1], complex)
+    # initPositionMap[0] = initQuanStat(X0, X1)
+    # for step in range(1, steps + 1):
+    #     positionMap = initPositionMap
+    #     initPositionMap = shiftCicleOperator(positionMap, step, shiftGateNum, node)
+    # return initPositionMap
     print 'begin'
-    initPositionMap = zeros([node, 2, 1], complex)
-    initPositionMap[0] = initQuanStat(X0, X1)
+    # initPositionMap = zeros([node, 2, 1], complex)
+    # initPositionMap[0] = initQuanStat(X0, X1)
+    initPositionMap = initQuanStatAverPosiCicle(X0, X1, node)
     for step in range(1, steps + 1):
+        print 'step: %s' % step
         positionMap = initPositionMap
-        initPositionMap = shiftCicleOperator(positionMap, step, shiftGateNum, node)
+        initPositionMap = shiftCicleWithPhaseSearchOperator(positionMap, step, shiftGateNum, node, Phase)
     return initPositionMap
 
 
@@ -292,8 +305,8 @@ def quantumWalkCicle(X0, X1, steps, shiftGateNum, node):
 Release 1, for animate plotting
 '''
 # 计算概率分布
-def QWCicleDistribution(X0, X1, steps, shiftGateNum, node):
-    positionMap = quantumWalkCicle(X0, X1, steps, shiftGateNum, node)
+def QWCicleDistribution(X0, X1, steps, shiftGateNum, node, Phase):
+    positionMap = quantumWalkCicle(X0, X1, steps, shiftGateNum, node, Phase)
     dimension = shape(positionMap)[0]
     distribution = zeros([dimension], dtype=float)
     sum = 0.0
@@ -525,32 +538,40 @@ def QWCicleWithPhaseLoopSearch(X0, X1, steps, shiftGateNum, node, Psi, gate):
 Release 7 : Search one position by marked in complete graph
 '''
 
-
 # quantum walk in cycle graph release for phase coin (添加phase coin，对shift operator进行了修正)
-def QWCicleWithPhaseSearch(X0, X1, steps, shiftGateNum, node, Psi, gate):
+def QWCicleWithPhaseSearch(X0, X1, steps, shiftGateNum, node, Phase):
     print 'begin'
     initPositionMap = zeros([node, 2, 1], complex)
-    # initPositionMap[0] = initQuanStat(X0, X1)
+    #initPositionMap[0] = initQuanStat(X0, X1)
     initPositionMap = initQuanStatAverPosiCicle(X0, X1, node)
+    StateFilename = 'Data/' + time.strftime('%Y%m%d-%H-%M-%S') + '_Search_State_' + str(shiftGateNum) + \
+                    str(node) + str(steps) + '.txt'
+    stateFile = open(StateFilename, 'w+')
+    infoS = 'Search State: X0 %s X1 %s, steps: %s, shiftGateNum: %s, node: %s, Phase: %s\n' % (
+        X0, X1, steps, shiftGateNum, node, Phase)
+    stateFile.write(infoS)
     PositionPsiFilename = 'Data/Search mark_0 X0' + str(X0) + '_X1' + str(X1) + '_' + str(shiftGateNum) + '-' + str(
-        node) + '_Steps' + str(steps) + 'Aver.txt'
+            node) + '_Steps' + str(steps) + time.strftime(' %Y%m%d-%H-%M-%S') + 'Aver.txt'
     PosiFile = open(PositionPsiFilename, 'a')
     for step in range(1, steps + 1):
         print 'step: %s' % step
         positionMap = initPositionMap
-        initPositionMap = shiftCicleWithPhaseSearchOperator(positionMap, step, shiftGateNum, node, Psi, gate)
+        initPositionMap = shiftCicleWithPhaseSearchOperator(positionMap, step, shiftGateNum, node, Phase)
         dimension = shape(initPositionMap)[0]
         distribution = zeros([dimension], dtype=float)
         sum = 0.0
-        PosiFile.write(str(Psi) + '\t')
+        PosiFile.write(str(Phase) + '\t')
         PosiFile.write(str(step) + '\t')
         for i in range(dimension):
             distribution[i] = float(initPositionMap[i][0][0].real ** 2 + initPositionMap[i][0][0].imag ** 2 + \
                                     initPositionMap[i][1][0].real ** 2 + initPositionMap[i][1][0].imag ** 2)
             sum += distribution[i]
             PosiFile.write(str(distribution[i]) + '\t')
+            stateFile.write(str(initPositionMap[i][0][0].real) + ' ' + str(initPositionMap[i][1][0].real) + '\t')
         print('sum: %s') % sum
         PosiFile.write('\n')
+        stateFile.write('\n')
+    stateFile.close()
     PosiFile.close()
     print 'finish'
 
@@ -564,6 +585,63 @@ def ciclePosiTrans(positionMap, steps, shiftGateNum):
         positionMapTrans[i] = positionMap[(initNode + i) % node]
     return positionMapTrans
 
+
+# 画出点位置概率分布随marked phase变化的等高线图
+def QWCicleContourfPlot(Filename, walkSteps, PiSteps, node, point):
+    x = arange(0, 2 * pi, 2 * pi / PiSteps)
+    y = arange(0, walkSteps, 1)
+    v = linspace(0, 1, 50, endpoint=True)
+    file = open(Filename, 'r')
+    dataList = zeros([walkSteps * PiSteps, node])
+    i = 0
+    for line in file.readlines():
+        for j in range(node):
+            dataList[i][j] = line.split('\t')[2 + j]
+        i += 1
+    z = zeros([walkSteps, PiSteps], float)
+    for yi in range(walkSteps):
+        for xi in range(PiSteps):
+            z[yi][xi] = float(dataList[xi * walkSteps + yi][point])
+    file.close()
+    plt.figure()
+    plt.title('Distribution of %s steps Quantum Walk in Cicle with different phase' % walkSteps)
+    plt.xlabel('Phase')
+    plt.ylabel('Step')
+    plt.contourf(x, y, z, v, cmap=plt.cm.jet)
+    x = plt.colorbar(ticks=v)
+    print x
+    plt.show()
+
+
+# 画出找到标记点的概率随步数变化图
+def QWFindProbabiltyPlot(Filename, walkSteps, node, point):
+    DataListQW = zeros([walkSteps + 1], float)
+    DataListCW = ones([walkSteps + 1], float)
+    data = open(Filename, 'r')
+    i = 0
+    for line in data.readlines():
+        DataListQW[i] = line.split('\t')[point + 2]
+        i += 1
+        # print line.index()
+    for j in range(1, walkSteps):
+        DataListQW[j] = (1 - DataListQW[j - 1]) * DataListQW[j] + DataListQW[j - 1]
+    DataListCW[0] = 1.0 / node
+    for j in range(1, walkSteps):
+        if node > j:
+            DataListCW[j] = DataListCW[j - 1] + (1 - DataListCW[j - 1]) * (1.0 / (node - j))
+            # print DataListCW[j]
+    plt.figure(1, figsize=(20, 9))
+    plt.title(
+        'Compare the probability of find the marked point of %s node Quantum Walk VS Classical Random Walk' % node)
+    plt.xlabel('Step')
+    plt.ylabel('Find Probability')
+    plt.xlim(0, walkSteps - 10)
+    plt.ylim(0.0, 1.2)
+    plt.plot(DataListQW, c='r')
+    plt.plot(DataListCW, c='b')
+    plt.legend(('Quantum Walk', 'Classical Random Walk'))
+    plt.grid(True)
+    plt.show()
 
 # 画出2D位置分布图
 def PlotCicle(distribution, steps, shiftGateNum, figName):

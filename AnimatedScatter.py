@@ -12,12 +12,13 @@ import time
 class AnimatedScatterQW(object):
     """An animated scatter plot using matplotlib.animations.FuncAnimation."""
 
-    def __init__(self, X0, X1, steps, shiftGateNum, node):
+    def __init__(self, X0, X1, steps, shiftGateNum, node, Phase):
         self.X0 = X0
         self.X1 = X1
         self.steps = steps
         self.shiftGateNum = shiftGateNum
         self.node = node
+        self.phase = Phase
         self.step = 1
         self.linedata = zeros([self.node, 1])
         self.distri = self.distribution()
@@ -50,7 +51,7 @@ class AnimatedScatterQW(object):
         self.ax1.axis([-4.5, 4.5, -1.5, 1.5])
         self.scat = self.ax1.scatter(x, y, s=d, c='red', marker='o', animated=True)
 
-        self.ax2.axis([1, 5000, 0, 1])
+        self.ax2.axis([1, 200, 0, 1])
         self.line, = self.ax2.plot([], [])
         # For FuncAnimation's sake, we need to return the artist we'll be using
         # Note that it expects a sequence of artists, thus the trailing comma.
@@ -62,25 +63,25 @@ class AnimatedScatterQW(object):
         radius = 1
         node = self.node
         data = zeros([node, 3], float)
-        Filename = 'Data/' + time.strftime('%Y%m%d-%H-%M-%S') + '.txt'
-        distrFlie = open(Filename, 'w+')
+        PosiFilename = 'Data/Search mark_01_' + time.strftime('%Y%m%d-%H-%M-%S') + '_Posi_0.txt'
+        PosiDistrFlie = open(PosiFilename, 'w+')
         for j in range(node):
             data[j, 0] = sin(j * 2 * math.pi / node) * radius
             data[j, 1] = cos(j * 2 * math.pi / node) * radius
         while True:
-            distribution = QDS.QWCicleDistribution(self.X0, self.X1, step, self.shiftGateNum, node)
+            distribution = QDS.QWCicleDistribution(self.X0, self.X1, step, self.shiftGateNum, node, self.phase)
             # data[:,2]= QDS.ciclePosiTrans(distribution, step, node)
             data[:, 2] = distribution
             # write distribution to txt file
-            distrFlie.write(str(step) + '\t')
+            PosiDistrFlie.write(str(step) + '\t')
             for x in range(shape(distribution)[0]):
-                distrFlie.write(str(distribution[x]) + '\t')
-            distrFlie.write('\n')
+                PosiDistrFlie.write(str(distribution[x]) + '\t')
+            PosiDistrFlie.write('\n')
             self.step = step
             print ('step: %s') % step
             step += 1
             yield data
-        distrFlie.close()
+        PosiDistrFlie.close()
 
     def update(self, i):
         """Update the scatter plot."""
@@ -120,5 +121,5 @@ class AnimatedScatterQW(object):
 
 
 if __name__ == '__main__':
-    a = AnimatedScatterQW(1, 0, 100, 3, 8)
+    a = AnimatedScatterQW(1 / sqrt(2), 1 / sqrt(2), 100, 4, 17, pi)
     a.show()
