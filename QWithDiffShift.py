@@ -34,6 +34,11 @@ def hadamardCoin():
     return hadamardCoin
 
 
+# 定义1D 任意角度coin
+def Coin(Deg):
+    Coin = array([[cos(Deg), sin(Deg)], [sin(Deg), -cos(Deg)]], complex)
+    return Coin
+
 # 定义1D phase coin
 def phaseCoin(Psi):
     phaseCoin = array([[1, 0], [0, exp(1j * Psi)]], complex)
@@ -60,10 +65,10 @@ def coinOperator(coin, positionMap):
 
 
 # 根据量子态进行位置变换，相当于一次walk
-def shiftOperator(positionMap, step, shiftGateNum):
+def shiftOperator(positionMap, step, shiftGateNum, Deg):
     for shiftNum in range(1, shiftGateNum + 1):
         newPositionMap = initPositionMap(step, shiftNum, shiftGateNum)
-        coin = hadamardCoin()
+        coin = Coin(Deg)
         coinMap = coinOperator(coin, positionMap)
         for i in range(shape(coinMap)[0]):
             newPositionMap[i][0][0] += coinMap[i][0][0]
@@ -73,18 +78,18 @@ def shiftOperator(positionMap, step, shiftGateNum):
 
 
 # quantum walk 的整体封装，返回位置分布的量子态
-def quantumWalk(X0, X1, steps, shiftGateNum):
+def quantumWalk(X0, X1, steps, shiftGateNum, Deg):
     initPositionMap = zeros([1, 2, 1], complex)
     initPositionMap[0] = initQuanStat(X0, X1)
     for step in range(1, steps + 1):
         positionMap = initPositionMap
-        initPositionMap = shiftOperator(positionMap, step, shiftGateNum)
+        initPositionMap = shiftOperator(positionMap, step, shiftGateNum, Deg)
     return initPositionMap
 
 
 # 计算QW的位置分布
-def QWDistribution(X0, X1, steps, shiftGateNum):
-    positionMap = quantumWalk(X0, X1, steps, shiftGateNum)
+def QWDistribution(X0, X1, steps, shiftGateNum, Deg):
+    positionMap = quantumWalk(X0, X1, steps, shiftGateNum, Deg)
     dimension = shape(positionMap)[0]
     distribution = zeros([dimension], dtype=float)
     sum = 0.0

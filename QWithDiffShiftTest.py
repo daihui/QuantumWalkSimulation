@@ -10,12 +10,16 @@ import TimebinQuantumWalk as TQW
 # distribution=QDS.QWDistribution(1/sqrt(2),1j/sqrt(2),700,1)
 # QDS.PlotX(distribution)
 
-def QDSPlot(X0, X1, steps, shiftGateNum):
+def QDSPlot(X0, X1, steps, shiftGateNum, Deg):
     for step in range(1, steps + 1):
-        distributionQDS = QDS.QWDistribution(X0, X1, step, shiftGateNum)
-        distributionQW = QDS.QWDistribution(X0, X1, 7 * step, 1)
+        distributionQDS = QDS.QWDistribution(X0, X1, step, shiftGateNum, Deg)
+        distributionQW = QDS.QWDistribution(X0, X1, 7 * step, 1, Deg)
         QDS.PlotComp(distributionQDS, distributionQW, step, 'QDS-VS-QW-H')
 
+
+distributionQDS = QDS.QWDistribution(1 / sqrt(2), 1j / sqrt(2), 10, 3, pi / 3)
+distributionQW = QDS.QWDistribution(1 / sqrt(2), 1j / sqrt(2), 7 * 10, 1, pi / 3)
+QDS.PlotComp(distributionQDS, distributionQW, 10, 'QDS-VS-QW-60-')
 
 def QDSCPlot(X0, X1, steps, shiftGateNum, node):
     for step in range(1, steps + 1):
@@ -56,4 +60,4 @@ def QDSCiclePlot(X0, X1, steps, shiftGateNum, node):
 # QDS.QWCicleWithPhaseSearch(1, 0, 200, 8, 257, pi)
 # QDS.QWFindProbabiltyPlot('Data/search marked 0 2-5.txt',200,5,0)
 
-TQW.TimebinQW(1, 0, 1, 20, 2, 5,0)
+# TQW.TimebinQW(1, 0, 1, 20, 2, 5,0)
